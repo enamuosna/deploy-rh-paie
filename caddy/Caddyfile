@@ -1,0 +1,38 @@
+# Passerelle de developpement : route chaque prefixe vers le service lance sur la machine hote.
+# En production (sprint 21), les upstreams deviennent les conteneurs des services et HTTPS est active.
+{
+    auto_https off
+    admin off
+}
+
+:8080 {
+    encode gzip
+
+    handle_path /identity/* {
+        reverse_proxy host.docker.internal:5001
+    }
+
+    handle_path /finance/* {
+        reverse_proxy host.docker.internal:5002
+    }
+
+    handle_path /commerce/* {
+        reverse_proxy host.docker.internal:5003
+    }
+
+    handle_path /paie-rh/* {
+        reverse_proxy host.docker.internal:5004
+    }
+
+    handle_path /reporting/* {
+        reverse_proxy host.docker.internal:5005
+    }
+
+    handle_path /gabarit/* {
+        reverse_proxy host.docker.internal:5000
+    }
+
+    handle {
+        respond "ERP RTS - passerelle" 200
+    }
+}
